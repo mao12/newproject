@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模板引擎art-template</title>
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/template-web.js"></script>
+</head>
+<body>
+
+    <div id="content"></div>
+    <script type="text/html" id="temp">
+        <h2>{{name}}----{{age}}</h2>
+        <p>{{@ test}}</p>
+        <ul>
+            {{each hobbies}}
+                <li>{{$value}}</li>
+            {{/each}}
+        </ul>
+        
+            {{if flag === false}}
+                <p>aaa </p>
+            {{else if flag=== true}}
+                <p>bbb </p>
+            {{/if}}
+        <div>注册时间：{{regTime | dataFormat}}</div>
+    </script>
+    <script>
+        template.defaults.imports.dataFormat = function(date){
+             var y = date.getFullYear();
+             var m = date.getMonth() + 1;
+             if(m <= 9){
+                 m = '0' + m
+             }
+             var d = date.getDate();
+             return y + '-' + m + '-' + d
+        }
+        var data = {name:'names', age:20, test:'<h3>世俗化</h3>',flag:true,hobbies:['吃饭','睡觉'],regTime:new Date()}
+        var htmlStr = template('temp',data);
+        
+        $('#content').append(htmlStr);
+    </script>
+</body>
+</html>

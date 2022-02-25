@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模板引擎art-template</title>
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/template-web.js"></script>
+    <style>
+        ul{
+            
+        }
+        li{
+            width: 650px;;
+            list-style: none;
+            padding: 10px;
+            border-bottom: 1px dashed #dcdcdc;
+        }
+        img{
+            width:200px;
+            margin-right: 20px;
+        }
+        a{
+            color:#333;
+            display: flex;
+            text-decoration: none;;
+        }
+        h2{
+            margin:0;
+            font-weight:normal;
+            font-size: 18px;
+        }
+        .detail{
+            font-size: 14px;;
+        }
+        p{
+            font-size: 12px;
+        }
+        .label span{
+            display: inline-block;
+            padding:2px 6px;
+            margin-right:8px;
+            font-size: 12px;
+            border:1px solid rgb(95, 154, 202);
+            color:rgb(70, 126, 172);
+            border-radius: 3px;
+        }
+        .count{
+            float: right;
+        }
+    </style>
+</head>
+<body>
+
+    <ul id="content">
+        
+    </ul>
+    <script type="text/html" id="temp">
+        {{each data}}
+        <li>
+            <a href="javascript:;">
+                <img src="{{$value.img}}" />
+                <div>
+                    <h2>{{$value.title}}</h2>
+                    <p class="label">
+                        {{each $value.tags}}
+                            <span>{{$value}}</span>
+                        {{/each}}
+                    </p>
+                    <p class="detail">{{$value.detail}}</p>
+                    <p><span>{{$value.source}}</span>&nbsp;<span>{{$value.time | dateFormat}}</span><span class="count">评论数：{{$value.cmlcount}}</span></p>
+                </div>
+            </a>
+        </li>
+        {{/each}}
+    </script>
+    <script>
+        
+       
+        $(function(){
+            function getNewsList(){
+                $.GET('URL...',function(res){
+                    if(res.status !== 200 ){
+                        return alert('失败')
+                    }
+                })
+            }
+            var dataList = {
+                    status:200,
+                    data:[
+                        {id:1,title:'新闻1',detail:'i十九点十分点击保存v你查下吧健康的回复v公司对光伏i大概v此v从',source:'新华网',cmlcount:3,tags:'热点,上次,的设备检测',img:'./img/baby1.jpg',time:'2021-01-30 2:2:3'},
+                        {id:2,title:'新闻2',detail:'i十九点十分点击保存v你查下吧健康的回复v公司对光伏i大概v此v从',source:'新华网',cmlcount:5,tags:'热点',img:'./img/baby2.jpg',time:'2021-1-30 2:20:30'},
+                        {id:3,title:'新闻3',detail:'i十九点十分点击保存v你查下吧健康的回复v公司对光伏i大概v此v从',source:'新华网',cmlcount:6,tags:'热点',img:'./img/baby3.jpg',time:'2021-1-30 2:20:30'},
+                        {id:4,title:'新闻4',detail:'i十九点十分点击保存v你查下吧健康的回复v公司对光伏i大概v此v从',source:'新华网',cmlcount:2,tags:'热点',img:'./img/baby4.jpg',time:'2021-1-3 2:20:30'},
+                        {id:5,title:'新闻5',detail:'i十九点十分点击保存v你查下吧健康的回复v公司对光伏i大概v此v从',source:'新华网',cmlcount:1,tags:'热点',img:'./img/baby5.jpg',time:'2021-1-30 2:20:30'}
+                    ]   
+                }
+            for(let i=0; i<dataList.data.length; i++){
+                dataList.data[i].tags = dataList.data[i].tags.split(',')
+            }
+            template.defaults.imports.dateFormat = function(date){
+                var dateNew = new Date(date);
+                var y = dateNew.getFullYear();
+                var m = appendZero(dateNew.getMonth()+1);
+                var d = appendZero(dateNew.getDate());
+                var hh = appendZero(dateNew.getHours());
+                var mm = appendZero(dateNew.getMinutes());
+                var ss = appendZero(dateNew.getSeconds());
+                return y + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss
+            }
+            function appendZero(num){
+                return num <= 9 ? (num = '0' + num ): num;
+            }
+            var htmlStr = template('temp', dataList);
+            $('#content').html(htmlStr)
+        })
+    </script>
+</body>
+</html>

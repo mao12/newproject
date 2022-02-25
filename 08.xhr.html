@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XMLHttpRequest</title>
+</head>
+<body>
+
+    <script>
+    // get请求
+       var xhr = new XMLHttpRequest();
+       xhr.open('GET','http://www.zzx');
+       xhr.send();
+       xhr.onreadystatechange = function(){
+           if(xhr.readyState === 4 && xhr.status === 200){
+               console.log(xhr.responseText)
+           }
+       }
+
+    //get请求带参数
+       var xhr = new XMLHttpRequest();
+       xhr.open('GET', 'http://www.ajax.com/books?id=1&author=鲁迅');
+       xhr.send();
+       xhr.onreadystatechange = function(){
+           if(xhr.readyState ===4 && xhr.status === 200){
+               console.log(xhr.responseText)
+           }
+       }
+
+    // 编码转码
+       var str = '黑马程序员';
+       var code = encodeURI(str);
+       var edoc = decodeURI('%E9%BB%91%E9%A9%AC')
+
+    // post请求
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://www.ajax.com/books');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencodeed');
+    xhr.send('bookname=水浒传&author=施耐庵&publisher=上海出版社')；
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+            console.log(xhr.responseText)
+        }
+    }
+
+    </script>
+</body>
+</html>

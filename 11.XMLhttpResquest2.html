@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xml新特性上传文件</title>
+</head>
+<body>
+    <input type="file" id="file1"/>
+    <button id="btn"></button>
+    <div id="percent" style="width:0%">0%</div>
+    <img src="" alt="" id="img" width="800"/>
+    <script>
+        var btn = document.querySelector('#btn');
+        btn.addEventListener('click', function(){
+            //获取用户上传文件列表
+            var file1 = document.querySelector('#file1').files;
+            //判断是否上传文件
+            if(file1.length <= 0){
+                return alert('请选择要上传的文件')
+            };
+            // 调用formData构造函数添加数据
+            var fd = new FormData();
+            fd.append('avatar', file1[0]);
+            //发送请求
+            var xml = new XMLHttpRequest();
+
+            //计算文件的上传进度
+            xml.onload.onpropress = function(e){
+                if(e.lengthComputable){
+                    var percentComplete = Math.ceil((e.loaded/e.total)*100);
+                    var percent = document.querySelector('#percent');
+                    percent.setAttribute('style','width:'+percentComplete+'%');
+                    percent.innerHTML = percentComplete +'%';
+                }
+            }
+            // 监听上传完成事件
+            xhr.upload.onload = function(){
+                var percent = document.querySelector('#percent');
+                percent.setAttribute('class','ending')
+            }
+            xml.open('POST', 'http://www.baidu.com');
+            xml.send(fd);
+            
+            xml.onreadystatechange = function(){
+                if(xml.readyState === 4 && xml.status === 200){
+                    //将服务器传回来的JSON数据转换为对象格式
+                    var data = JSON.parse(xml.responseText);
+                    //判断是否成功传回图片
+                    if(data.status === 200){
+                        document.querySelector('#img').src='http://www.baidu.com' + data.url;
+                    }else{
+                        console.log(data.message)
+                    }
+                }
+            }
+            
+        })
+    </script>
+</body>
+</html>

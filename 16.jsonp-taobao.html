@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jsonp发起淘宝请求</title>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/template-web.js"></script>
+</head>
+<body>
+    <input id="ipt" type="text" placeholder="请输入搜索内容"/>
+    <button id="btn">搜索</button>
+    <ul id="suggests">
+       
+    </ul>
+    <script type="text/html" id="tpl-suggestList">
+        {{each result}}
+            <li>{{$value[0]}}</li>
+        {{/each}}
+    </script>
+    <script>
+        var ipt = document.querySelector('#ipt');
+        var timer = null;
+        var cacheObj = {};
+        function debounceSearch(kw){
+            timer = setTimeout(function(){
+                getSuggestList(kw)
+            },500)
+        }
+        ipt.addEventListener('keyup', function(){
+            clearTimeout(timer);
+            let keywords = this.value.trim();
+            if(keywords.length <= 0){
+                return $('#suggests').empty().hide();
+            }
+            if(cacheObj[keywords]){
+                console.log(cacheObj);
+                return renderSuggestList(cacheObj[keywords])
+            }
+            debounceSearch(keywords)
+        })
+
+        function getSuggestList(kw){
+            $.ajax({
+                url: 'https://suggest.taobao.com/sug?q=' + kw,
+                dataType: 'jsonp',
+                success: function(res){
+                    console.log(res)
+                    renderSuggestList(res)
+                }
+            })  
+        }
+        function renderSuggestList(res){
+            if(res.result.length <= 0){
+                return $('#suggests').empty().hide();
+            }
+            var htmlStr = template('tpl-suggestList', res);
+            $('#suggests').html(htmlStr).show();
+            var k = ipt.value.trim();
+            cacheObj[k] = res;
+
+        }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发表评论</title>
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <style>
+        body{
+            padding:20px;
+        }
+        ul{
+            padding: 0;
+            border: 1px solid #dcdcdc;
+            border-bottom: 0;
+            width:600px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        ul li{
+            height: 30px;
+            line-height: 30px;
+           
+            border-bottom: 1px solid #dcdcdc;
+            list-style: none;
+            padding:2px 14px;
+            padding-right: 9px;
+        }
+        
+        span{
+            float: right;
+            background-color: rgb(124, 180, 212);
+            border-radius: 6px;
+            padding:0 10px;
+            height: 24px;
+            line-height: 24px;
+            color:#fff;
+            margin:3px 5px;
+            font-size: 12px;
+        }
+        span:nth-child(2){
+            background-color: rgb(155, 124, 212);
+        }
+    </style>
+</head>
+<body>
+
+    <form action="/login" id="form1">
+        <h2>发表评论</h2>
+        评&nbsp;论&nbsp;人：&nbsp;<input type="text" name="username"><br/><br/>
+        评论内容：<textarea name="content" style="vertical-align: bottom;"></textarea>
+        <input type="submit" />
+    </form>
+    <ul id="commentList">
+        <li>
+           item1
+           <span>aaa</span> 
+           <span>bbb</span>
+        </li>
+    </ul>
+    
+    <script>
+        getCommentList()
+        function getCommentList(){
+            $.ajax({
+                method:'GET',
+                url:'localhost://api/cmllist',
+                success:function(res){
+                    if(res.status !== 200) {
+                        return alert('失败')
+                    }
+                    var rows = [];
+                    $.each(res.data, function(i, item){
+                        rows.push(`<li>${item.content}
+                                <span>${item.time}</span> 
+                                <span>${item.username}</span>
+                                </li>`
+                        )
+                    })
+                    $('#commentList').empty().append(rows.join(''))
+                }
+            })
+        }
+        $(function(){
+            $('#form1').on('submit', function(e){
+                e.preventDefault();//阻止表单默认行为
+                var all = $(this).serialize() //获取表单全部数据,input必须有name属性才能获取到，以键值对的形式
+                // console.log(all);
+                $.post('url...',all,function(res){
+                    if(res.status !== 201) {
+                        return alert('error')
+                    }
+                    getCommentList()
+                    $('#form')[0].reset();
+                })
+                // 
+            })
+        })
+        
+    </script>
+</body>
+</html>

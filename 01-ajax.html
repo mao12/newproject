@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交互</title>
+    <script src="./js/jquery-3.2.1.min.js"></script>
+<body>
+    <div class="content">
+        <li class="message"></li>
+        
+    </div>
+    <input type="text" id="ipt">
+    <input type="submit" value="发送" class="input_sub" id="btn">
+    <audio src="" id="voice" autoplay style="display: none;"></audio>
+    <script>
+        $(function(){
+            //滚动条定位消息
+            scrollBottom();
+            $('#btn').on('click',function(){
+                var text = $('ipt').val().trim();
+                if(text <= 0){
+                    return $('ipt').val('');
+                } 
+                var newMesg = '<li class="my_message">'+text+'</li>'
+                $('#content').append(newMesg);
+                $('ipt').val('');
+
+                $.ajax({
+                    method: 'GET',
+                    url: 'url...',
+                    data: {
+                        spoken :text
+                    },
+                    success: function(res){
+                        if(res.message === 'success'){
+                            var mes = res.data.info.text;
+                            $('#content').append( '<li class="message">'+mes+'</li>');
+                            //滚动条定位消息
+                            scrollBottom();
+                            getVioce(mes)
+                        }
+                    }
+
+                })
+                function getVioce(text){
+                    $.ajax({
+                        method:'GET',
+                        url:'url...',
+                        data:{
+                            text: text
+                        },
+                        success: function(res){
+                            if(res.status == 200){
+                                $('#voice').attr('src', res.voiceUrl)
+                            }
+                        }
+                    })
+                }
+                
+            })
+        })
+    </script>
+</body>
+</html>

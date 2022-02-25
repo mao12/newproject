@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自己封装模板引擎</title>
+</head>
+<body>
+    <div id="content"></div>
+    <script type="text/html" id="diy">
+       <div>姓名：{{name}}</div>
+       <div>年龄：{{ age }}</div>
+       <div>性别：{{  gender}}</div>
+       <div>住址：{{address  }}</div>
+
+    </script>
+    <script>
+        data = {name: '张三', age: 29, gender: '男', address: '北京'};
+        var htmlStr = template('diy', data);
+        document.getElementById('content').innerHTML = htmlStr;
+        function template(id, data){
+            var str = document.getElementById(id).innerHTML;
+            var pattern = /{{\s*([a-zA-Z]+)\s*}}/;
+            var patternResult = null;
+            while(patternResult = pattern.exec(str)){
+                str = str.replace(patternResult[0],data[patternResult[1]])
+            };
+            return str;
+        }
+    </script>
+</body>
+</html>

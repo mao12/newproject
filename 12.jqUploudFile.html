@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <title>jq上传文件</title>
+</head>
+<body>
+    <input type="file" id="file1"/>
+    <button id="btn"></button>
+    <div id="percent" style="width:0%">0%</div>
+    <img src="./image/loading.gif" alt="" id="img" style="diaplay:none"/>
+    <script>
+        $(function(){
+            //监听页面中所有AJAX请求，开始请求显示加载状态图片
+            $(document).ajaxStart(function(){
+                $('#img').show();
+            })
+            //结束请求隐藏图片
+            $(document).ajaxStop(function(){
+                $('#img').hide();
+            })
+            $('#btn').on('click', function(){
+                var file1 = $('file1')[0].files;
+                if(file1.length <= 0){
+                    return alert('请选择文件后上传')
+                }
+                var fd = new FormData();
+                fd.append('avater', file1[0]);
+                $.ajax({
+                    method:'POST',
+                    url:'http://www.baidu.com',
+                    data:fd,
+                    //设置contentType为默认值
+                    contentType: false,
+                    //不对formdata里的值编码
+                    processData: false,
+                    success: function(res){
+                        if(res.status === 200){
+                            $('#img').attr('src', 'http://www.baidu.com'+data.url) 
+                        }else{
+                            alert('上传失败')
+                        }
+                    }
+                })
+            })
+        })
+      
+    </script>
+</body>
+</html>
